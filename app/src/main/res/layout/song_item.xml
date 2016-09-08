@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="45dp"
+    android:layout_marginTop="8dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="7 Minutes In Heaven"
+        android:textSize="16sp"
+        android:id="@+id/tvSongName"
+        android:textColor="@android:color/black"
+        android:layout_marginLeft="5dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="01:05"
+        android:id="@+id/tvTime"
+        android:layout_gravity="right"
+        android:layout_below="@+id/textView"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Fallout Boy"
+        android:id="@+id/tvAuthor"
+        android:layout_below="@+id/tvSongName"
+        android:layout_alignLeft="@+id/tvSongName"
+        android:layout_alignStart="@+id/tvSongName" />
+
+</RelativeLayout>
