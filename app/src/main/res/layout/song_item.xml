@@ -2,8 +2,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="45dp"
-    android:layout_marginTop="8dp">
+    android:layout_height="75dp"
+    android:layout_marginTop="8dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:background="?android:attr/selectableItemBackground">
 
     <TextView
         android:layout_width="wrap_content"
@@ -32,5 +35,16 @@
         android:layout_below="@+id/tvSongName"
         android:layout_alignLeft="@+id/tvSongName"
         android:layout_alignStart="@+id/tvSongName" />
+
+    <SeekBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/seekBar"
+        android:visibility="invisible"
+        android:layout_below="@+id/tvAuthor"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>
