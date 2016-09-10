@@ -1,5 +1,6 @@
 package com.gorynalexander.audioplayergoryn;
 
+import android.content.Context;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
@@ -17,12 +18,12 @@ import java.util.jar.Pack200;
 /**
  * Created by Odinn on 08.09.2016.
  */
-public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongListHolder>  {
+public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongListHolder> {
     private List<Song> songList;
     private MediaPlayer mediaPlayer;
-    private MediaController mediaController;
+    private SeekBar lastSeek;
 
-    public SongsAdapter(List<Song> songList){
+    public SongsAdapter(List<Song> songList) {
         this.songList = songList;
     }
 
@@ -33,39 +34,17 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongListHold
     }
 
     @Override
-    public void onBindViewHolder(final SongListHolder holder, int position) {
+    public void onBindViewHolder(final SongListHolder holder, final int position) {
         final Song song = songList.get(position);
         holder.tvSongName.setText(song.getSongName());
         holder.tvSongTime.setText(transferToMinSecs(Integer.parseInt(song.getSongTime())));
         holder.tvAuthor.setText(song.getAuthor());
 
-        mediaController = new MediaController(holder.itemView.getContext());
-        mediaController.setMediaPlayer((MediaController.MediaPlayerControl) mediaPlayer);
-        // TODO : think about duration time
-
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mediaPlayer != null) {
-                    mediaPlayer.stop();
-                    mediaPlayer.release();
-            //        holder.seekBar.setVisibility(View.INVISIBLE);
-               //     holder.itemView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 200));
-                    mediaPlayer = null;
-                    holder.seekBar.setVisibility(View.INVISIBLE);
-
-
-                    // TODO: Create view for convenient control (pause, play, rewind, next track)
-
-                } else {
-
-                    mediaPlayer = MediaPlayer.create(view.getContext(), Uri.parse(song.getSongURI()));
-            //        holder.seekBar.setVisibility(View.VISIBLE);
-                    mediaPlayer.start();
-                    holder.seekBar.setVisibility(View.VISIBLE);
-      //              holder.seekBar.setProgress(Integer.parseInt(song.getSongTime()));
-                    holder.seekBar.setMax(Integer.parseInt(song.getSongTime()));
-                }
+                Uri uri = Uri.parse(song.getSongURI());
+                checkMediaPlayer(view.getContext(), uri, holder );
 
             }
         });
@@ -95,8 +74,6 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongListHold
     }
 
 
-
-
     public class SongListHolder extends RecyclerView.ViewHolder implements MediaController.MediaPlayerControl {
         TextView tvAuthor;
         TextView tvSongName;
@@ -118,6 +95,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongListHold
 
         @Override
         public void pause() {
+            seekBar.setVisibility(View.INVISIBLE);
             mediaPlayer.pause();
         }
 
@@ -167,12 +145,37 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongListHold
         }
     }
 
-    private String transferToMinSecs (int durationTime) {
-        int durationSecs = durationTime/1000;
-        int resultMins = durationSecs/60;
-        int resultSecs = durationSecs%60;
-        String timeString = String.format("%02d:%02d",  resultMins, resultSecs);
+    private String transferToMinSecs(int durationTime) {
+        int durationSecs = durationTime / 1000;
+        int resultMins = durationSecs / 60;
+        int resultSecs = durationSecs % 60;
+        String timeString = String.format("%02d:%02d", resultMins, resultSecs);
         return timeString;
-     //   return resultMins + ":"+ resultSecs;
+        //   return resultMins + ":"+ resultSecs;
+    }
+
+    private void checkMediaPlayer(Context context, Uri uri, SongListHolder h){
+        if (mediaPlayer == null){
+            mediaPlayer = MediaPlayer.create(context, uri);
+            mediaPlayer.start();
+            h.seekBar.setVisibility(View.VISIBLE);
+            h.seekBar.setMax(mediaPlayer.getDuration());
+            lastSeek = h.seekBar;
+        } else {
+            if (lastSeek.getMax() == h.seekBar.getMax()){
+                mediaPlayer.stop();
+                h.seekBar.setVisibility(View.INVISIBLE);
+                mediaPlayer.release();
+                mediaPlayer = null;
+            } else {
+
+                lastSeek.setVisibility(View.INVISIBLE);
+                h.seekBar.setVisibility(View.VISIBLE);
+                mediaPlayer.stop();
+                lastSeek = h.seekBar;
+                mediaPlayer = MediaPlayer.create(context, uri);
+                mediaPlayer.start();
+            }
+        }
     }
 }
