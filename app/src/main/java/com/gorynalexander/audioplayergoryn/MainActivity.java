@@ -1,11 +1,13 @@
 package com.gorynalexander.audioplayergoryn;
 
 import android.database.Cursor;
+import android.media.MediaPlayer;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.SeekBar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,14 +15,17 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     RecyclerView rvSong;
 
+    SongsAdapter songsAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         rvSong = (RecyclerView) findViewById(R.id.rView);
         rvSong.setLayoutManager(new LinearLayoutManager(this));
-        SongsAdapter songsAdapter = new SongsAdapter(uploadSongs());
+        songsAdapter = new SongsAdapter(uploadSongs());
         rvSong.setAdapter(songsAdapter);
+
     }
 
     private List<Song> uploadSongs() {
@@ -41,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
                 null);
         List<Song> song = new ArrayList<>();
         while (cursor.moveToNext()) {
-          //  song.add(new Song(cursor.getString(0), cursor.getString(1), cursor.getString(2), cursor.getString(3)));
+            //  song.add(new Song(cursor.getString(0), cursor.getString(1), cursor.getString(2), cursor.getString(3)));
             song.add(new Song(cursor.getString(0), cursor.getString(1), cursor.getString(2), cursor.getString(3)));
 
         }
